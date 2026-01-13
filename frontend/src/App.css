@@ -1,0 +1,71 @@
+/* RESET & GLOBAL FIXES */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Prevent shrinking of any section */
+section {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Typography */
+body {
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #fff;
+  background: linear-gradient(-45deg, #FFC3A0, #FFAFBD, #C3B1E1, #A8EDEA);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Ensure App container fills full width */
+.App {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prevents layout collapsing when using fixed navbar */
+main {
+  width: 100%;
+  flex: 1;
+}
+
+/* Fix images (if any) */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

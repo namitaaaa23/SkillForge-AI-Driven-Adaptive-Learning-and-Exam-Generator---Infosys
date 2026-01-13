@@ -1,0 +1,55 @@
+:root {
+  /* Vibrant/Pastel Palette - Restored */
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+  --accent-color: #ffb199;
+
+  --bg-color: #ffffff;
+  --text-main: #333333;
+  --text-white: #ffffff;
+
+  --btn-radius: 30px;
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+
+  /* FLUID PASTEL ANIMATED BACKGROUND */
+  /* Using the bright/pastel mix as seen in the "Pink" images */
+  background: linear-gradient(-45deg, #FF9A9E, #FECFEF, #E0C3FC, #A18CD1);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s;
+}
+
+ul {
+  list-style: none;
+}
