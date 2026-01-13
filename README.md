@@ -43,9 +43,9 @@ skillforge-application/
 |----------|-------------|--------|
 | Milestone 1 | Architecture design, wireframes, workflow diagrams | Completed |
 | Milestone 2 | Frontend development & backend API integration | Completed |
-| Milestone 3 | Database integration (MongoDB) | Pending |
-| Milestone 4 | AI integration for adaptive learning & exam generation | Pending |
-| Milestone 5 | Final testing, deployment & optimization | Pending |
+| Milestone 3 | Database integration (MongoDB) | Completed |
+| Milestone 4 | AI integration for adaptive learning & exam generation | Completed |
+| Milestone 5 | Final testing, deployment & optimization | Completed |
 
 ---
 
