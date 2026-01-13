@@ -1,0 +1,210 @@
+.ranking-container {
+  padding: 40px 20px;
+  background: transparent;
+  /* Allows global animated background */
+  min-height: 100vh;
+}
+
+.ranking-header {
+  text-align: center;
+  color: var(--text-main);
+  margin-bottom: 50px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2rem;
+  border-radius: 20px;
+  display: inline-block;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.ranking-header h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.ranking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.score-card,
+.progress-card,
+.stats-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.score-card:hover,
+.progress-card:hover,
+.stats-card:hover {
+  transform: translateY(-5px);
+}
+
+.main-score {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.score-circle {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 6px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.score-value {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.score-label {
+  font-size: 12px;
+  color: #888;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+.performance-level {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.rank-number {
+  color: var(--primary-color);
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.progress-card h3,
+.stats-card h3 {
+  margin: 0 0 20px 0;
+  color: var(--text-main);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.progress-bar {
+  background: #f0f2f5;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  border-radius: 6px;
+}
+
+.stat-value {
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 15px 0;
+}
+
+.top-performers {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  backdrop-filter: blur(10px);
+}
+
+.top-performers h2 {
+  color: var(--text-main);
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 15px;
+}
+
+.ranking-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  margin-bottom: 15px;
+}
+
+.rank-badge {
+  background: var(--primary-color);
+  box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+}
+
+.ranking-item.current-student {
+  background: linear-gradient(to right, rgba(106, 17, 203, 0.05), #fff);
+  border-left-color: var(--primary-color);
+}
+
+.achievements-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(10px);
+  max-width: 1200px;
+  margin: 0 auto 50px auto;
+}
+
+.achievement {
+  background: white;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.achievement.unlocked {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(106, 17, 203, 0.3);
+}
+
+.achievement.unlocked .achievement-icon,
+.achievement.unlocked p {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .main-score {
+    grid-column: span 1;
+    flex-direction: column;
+    text-align: center;
+  }
+}

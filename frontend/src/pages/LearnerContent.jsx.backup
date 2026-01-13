@@ -1,0 +1,547 @@
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./LearnerDashboard.css";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
+
+export default function LearnerContent() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { logout, user, loading: authLoading } = useAuth();
+    const [showMenu, setShowMenu] = useState(false);
+    const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [courseContents, setCourseContents] = useState([]);
+    const [selectedContent, setSelectedContent] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterLevel, setFilterLevel] = useState("ALL");
+    const [showEnrollModal, setShowEnrollModal] = useState(false);
+    const [enrollingCourse, setEnrollingCourse] = useState(null);
+    const [showGenerateModal, setShowGenerateModal] = useState(false);
+    const [generatingCourse, setGeneratingCourse] = useState(null);
+    const [selectedFormat, setSelectedFormat] = useState("PDF");
+    const [generatingContent, setGeneratingContent] = useState(false);
+
+    const userProfile = user || location.state?.userProfile || { userName: "Student", email: "", id: "", role: "Student" };
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            navigate('/');
+        }
+    }, [authLoading, user, navigate]);
+
+    useEffect(() => {
+        if (user) {
+            loadCourses();
+        }
+    }, [user]);
+
+    if (authLoading) return <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Loading...</div>;
+    if (!user) return null;
+
+    useEffect(() => {
+        filterAndSortCourses();
+    }, [courses, searchTerm, filterLevel]);
+
+    const loadCourses = async () => {
+        try {
+            setLoading(true);
+            const response = await api.getCourses();
+            if (response.success) {
+                setCourses(response.data || []);
+            }
+        } catch (error) {
+            console.error("Failed to load courses:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filterAndSortCourses = () => {
+        let filtered = courses.filter(c => {
+            const matchesSearch = c.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                c.description?.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesLevel = filterLevel === "ALL" || c.difficultyLevel === filterLevel;
+            return matchesSearch && matchesLevel;
+        });
+        setFilteredCourses(filtered);
+    };
+
+    const fetchCourseContent = async (courseId) => {
+        try {
+            setLoading(true);
+            const response = await api.request(`/api/learning-content/course/${courseId}`);
+            if (response) {
+                setCourseContents(response);
+            }
+        } catch (error) {
+            console.error("Failed to load course content", error);
+            setCourseContents([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleViewCourse = (course) => {
+        setSelectedCourse(course);
+        fetchCourseContent(course.id);
+        setSelectedContent(null);
+    };
+
+    const handleBackToCourses = () => {
+        setSelectedCourse(null);
+        setCourseContents([]);
+        setSelectedContent(null);
+    };
+
+    const handleEnrollClick = (course) => {
+        setEnrollingCourse(course);
+        setShowEnrollModal(true);
+    };
+
+    const handleEnroll = async () => {
+        if (!enrollingCourse) return;
+        try {
+            const response = await api.enrollInCourse(enrollingCourse.id);
+            if (response.success) {
+                alert("Successfully enrolled in course!");
+                setShowEnrollModal(false);
+                setEnrollingCourse(null);
+                loadCourses();
+            }
+        } catch (error) {
+            console.error("Enrollment failed:", error);
+            alert("Failed to enroll in course. Please try again.");
+        }
+    };
+
+    const handleGenerateClick = (course) => {
+        setGeneratingCourse(course);
+        setShowGenerateModal(true);
+    };
+
+    const handleGenerateMaterial = async () => {
+        if (!generatingCourse) return;
+
+        setGeneratingContent(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            alert(`Study material in ${selectedFormat} format will be generated for "${generatingCourse.title}"!\n\nThis feature will create personalized study materials based on your learning preferences.`);
+
+            setShowGenerateModal(false);
+            setGeneratingCourse(null);
+            setSelectedFormat("PDF");
+        } catch (error) {
+            console.error("Generation failed:", error);
+            alert("Failed to generate study material. Please try again.");
+        } finally {
+            setGeneratingContent(false);
+        }
+    };
+
+    const renderContentViewer = () => {
+        if (!selectedContent) return null;
+
+        switch (selectedContent.contentType) {
+            case 'PDF':
+                return (
+                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                        <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>{selectedContent.title}</h3>
+                        <p style={{ color: '#666', marginBottom: '1.5rem', lineHeight: '1.6' }}>{selectedContent.description}</p>
+                        <a href={selectedContent.contentUrl} target="_blank" rel="noopener noreferrer" className="primary-btn" style={{ display: 'inline-block', textDecoration: 'none' }}>
+                            Download PDF Document
+                        </a>
+                    </div>
+                );
+            case 'YOUTUBE':
+            case 'VIDEO':
+                return (
+                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                        <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>{selectedContent.title}</h3>
+                        <p style={{ color: '#666', marginBottom: '1.5rem', lineHeight: '1.6' }}>{selectedContent.description}</p>
+                        <iframe
+                            width="100%"
+                            height="500"
+                            src={selectedContent.contentUrl ? selectedContent.contentUrl.replace("watch?v=", "embed/") : ""}
+                            title={selectedContent.title}
+                            frameBorder="0"
+                            allowFullScreen
+                            style={{ borderRadius: '12px', border: '1px solid #e0e0e0' }}
+                        ></iframe>
+                    </div>
+                );
+            case 'BLOG':
+            case 'TEXT':
+                return (
+                    <div style={{ background: 'white', padding: '2rem', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                        <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>{selectedContent.title}</h3>
+                        <div style={{ background: '#f9f9f9', padding: '2rem', borderRadius: '12px', lineHeight: '1.8', color: '#333', fontSize: '1rem', border: '1px solid #e0e0e0' }}>
+                            {selectedContent.textContent || selectedContent.description}
+                        </div>
+                        {selectedContent.contentUrl && (
+                            <a href={selectedContent.contentUrl} target="_blank" rel="noopener noreferrer" className="primary-btn" style={{ marginTop: '1.5rem', display: 'inline-block', textDecoration: 'none' }}>
+                                Read Full Article
+                            </a>
+                        )}
+                    </div>
+                );
+            default:
+                return <p style={{ textAlign: 'center', color: '#888', padding: '2rem' }}>Content format not supported for preview.</p>;
+        }
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
+    const getDifficultyColor = (level) => {
+        const colors = {
+            BEGINNER: "#e3f2fd",
+            INTERMEDIATE: "#fff3e0",
+            ADVANCED: "#fce4ec",
+            EXPERT: "#f3e5f5"
+        };
+        return colors[level] || "#f5f5f5";
+    };
+
+    const getDifficultyTextColor = (level) => {
+        const colors = {
+            BEGINNER: "#1976d2",
+            INTERMEDIATE: "#f57c00",
+            ADVANCED: "#c2185b",
+            EXPERT: "#7b1fa2"
+        };
+        return colors[level] || "#333";
+    };
+
+    const glassModalStyle = {
+        background: 'rgba(255, 255, 255, 0.98)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '24px',
+        boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.6)',
+        padding: '2.5rem',
+        width: '550px',
+        maxWidth: '90%'
+    };
+
+    return (
+        <div className="ld-wrapper" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', minHeight: '100vh' }}>
+            <div className="ld-topbar">
+                <div className="header-container">
+                    <div className="ld-logo" onClick={() => navigate('/learner-dashboard', { state: { userProfile } })} style={{ cursor: 'pointer' }}>SkillForge AI</div>
+                    <nav className="nav-links">
+                        <a href="/learner-dashboard" onClick={(e) => { e.preventDefault(); navigate('/learner-dashboard', { state: { userProfile } }); }}>Dashboard</a>
+                        <a href="/learner-content" className="active" onClick={(e) => e.preventDefault()}>Courses</a>
+                        <a href="/learner-progress" onClick={(e) => { e.preventDefault(); navigate('/learner-progress', { state: { userProfile } }); }}>Progress</a>
+                    </nav>
+                    <div className="ld-topbar-right">
+                        <div className="ld-avatar" onClick={() => navigate('/profile', { state: { userProfile } })}>{userProfile.userName?.charAt(0) || 'S'}</div>
+                    </div>
+                </div>
+            </div>
+
+            {showMenu && (
+                <div className="ld-menu-panel">
+                    <div className="ld-user-info">
+                        <h3>{userProfile.userName}</h3>
+                        <p>{userProfile.email}</p>
+                    </div>
+                    <hr style={{ margin: '10px 0', border: '0', borderTop: '1px solid #eee' }} />
+                    <button className="ld-menu-item" onClick={() => navigate('/profile', { state: { userProfile } })}>Edit Profile</button>
+                    <button className="ld-menu-item" onClick={() => navigate('/profile', { state: { userProfile } })}>Settings</button>
+                    <hr style={{ margin: '10px 0', border: '0', borderTop: '1px solid #eee' }} />
+                    <button className="ld-logout" onClick={handleLogout}>Sign Out</button>
+                </div>
+            )}
+
+            <div className="ld-main" style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+                {!selectedCourse ? (
+                    <>
+                        {/* Hero Section with Gradient */}
+                        <div style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            borderRadius: '24px',
+                            padding: '3rem',
+                            marginBottom: '2rem',
+                            boxShadow: '0 20px 60px rgba(102, 126, 234, 0.4)',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', transform: 'translate(30%, -30%)' }}></div>
+                            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '200px', height: '200px', background: 'rgba(255,255,255,0.08)', borderRadius: '50%', transform: 'translate(-30%, 30%)' }}></div>
+
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                                <h1 style={{ color: 'white', fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: '700' }}>
+                                    Course Library
+                                </h1>
+                                <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.1rem', marginBottom: '2rem' }}>
+                                    Explore and master new skills with our comprehensive courses
+                                </p>
+
+                                {/* Stats Cards */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                                    <div style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Total Courses</div>
+                                        <div style={{ color: 'white', fontSize: '2.5rem', fontWeight: '700' }}>{courses.length}</div>
+                                    </div>
+                                    <div style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Available Now</div>
+                                        <div style={{ color: 'white', fontSize: '2.5rem', fontWeight: '700' }}>{filteredCourses.length}</div>
+                                    </div>
+                                    <div style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)', borderRadius: '16px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.2)' }}>
+                                        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>All Levels</div>
+                                        <div style={{ color: 'white', fontSize: '2.5rem', fontWeight: '700' }}>4</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Search by course name or description..."
+                                    style={{
+                                        flex: 1,
+                                        minWidth: '300px',
+                                        padding: '14px 20px',
+                                        border: '2px solid #e0e0e0',
+                                        borderRadius: '12px',
+                                        fontSize: '1rem'
+                                    }}
+                                    value={searchTerm}
+                                    onChange={e => setSearchTerm(e.target.value)}
+                                />
+                                <select
+                                    style={{
+                                        padding: '14px 20px',
+                                        border: '2px solid #e0e0e0',
+                                        borderRadius: '12px',
+                                        cursor: 'pointer',
+                                        fontSize: '1rem',
+                                        fontWeight: '600',
+                                        background: 'white',
+                                        minWidth: '180px'
+                                    }}
+                                    value={filterLevel}
+                                    onChange={e => setFilterLevel(e.target.value)}
+                                >
+                                    <option value="ALL">All Difficulty Levels</option>
+                                    <option value="BEGINNER">Beginner</option>
+                                    <option value="INTERMEDIATE">Intermediate</option>
+                                    <option value="ADVANCED">Advanced</option>
+                                    <option value="EXPERT">Expert</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {loading ? (
+                            <div style={{ textAlign: 'center', padding: '80px', background: 'white', borderRadius: '16px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                                <div style={{ fontSize: '1.1rem', color: '#666' }}>Loading courses...</div>
+                            </div>
+                        ) : filteredCourses.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '80px', background: 'white', borderRadius: '16px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                                <p style={{ fontSize: '1.2rem', color: '#888', marginBottom: '1.5rem' }}>No courses found matching your criteria</p>
+                                <button className="primary-btn" onClick={() => { setSearchTerm(''); setFilterLevel('ALL'); }}>
+                                    Clear All Filters
+                                </button>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '2rem' }}>
+                                {filteredCourses.map(course => (
+                                    <div key={course.id} style={{
+                                        background: 'white',
+                                        borderRadius: '16px',
+                                        overflow: 'hidden',
+                                        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                                        transition: 'all 0.3s',
+                                        border: '1px solid #e0e0e0'
+                                    }} className="course-card">
+                                        {course.thumbnailUrl && (
+                                            <div style={{ height: '220px', background: `url(${course.thumbnailUrl}) center/cover`, backgroundSize: 'cover', position: 'relative' }}>
+                                                <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                                                    <span style={{
+                                                        background: getDifficultyColor(course.difficultyLevel),
+                                                        color: getDifficultyTextColor(course.difficultyLevel),
+                                                        padding: '8px 16px',
+                                                        borderRadius: '20px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: '700'
+                                                    }}>
+                                                        {course.difficultyLevel}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <div style={{ padding: '1.75rem' }}>
+                                            <h3 style={{ fontSize: '1.4rem', margin: '0 0 1rem 0', fontWeight: '700', color: '#333' }}>{course.title}</h3>
+                                            <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                                                {course.description?.substring(0, 150)}{course.description?.length > 150 ? '...' : ''}
+                                            </p>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                                                <div style={{ background: '#f8f9fa', padding: '0.75rem', borderRadius: '10px', border: '1px solid #e0e0e0' }}>
+                                                    <div style={{ fontSize: '0.75rem', color: '#888', marginBottom: '0.25rem' }}>Duration</div>
+                                                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#333' }}>{course.estimatedHours || 0}h</div>
+                                                </div>
+                                                <div style={{ background: '#f8f9fa', padding: '0.75rem', borderRadius: '10px', border: '1px solid #e0e0e0' }}>
+                                                    <div style={{ fontSize: '0.75rem', color: '#888', marginBottom: '0.25rem' }}>Students</div>
+                                                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#333' }}>{course.enrolledUserIds?.length || 0}</div>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                                    <button className="primary-btn" onClick={() => handleViewCourse(course)} style={{ flex: 1, padding: '12px', fontSize: '0.95rem' }}>
+                                                        View Details
+                                                    </button>
+                                                    <button onClick={() => handleEnrollClick(course)} style={{ flex: 1, background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '0.95rem' }}>
+                                                        Enroll Now
+                                                    </button>
+                                                </div>
+                                                <button onClick={() => handleGenerateClick(course)} style={{ width: '100%', background: 'linear-gradient(135deg, #f093fb, #f5576c)', color: 'white', border: 'none', borderRadius: '12px', padding: '12px', cursor: 'pointer', fontWeight: '600', fontSize: '0.95rem' }}>
+                                                    Generate Materials
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <button onClick={handleBackToCourses} style={{ background: 'white', border: '2px solid #e0e0e0', borderRadius: '12px', padding: '12px 24px', cursor: 'pointer', fontWeight: '600', marginBottom: '2rem' }}>
+                            ← Back to Course Library
+                        </button>
+
+                        <div style={{
+                            background: 'white',
+                            borderRadius: '16px',
+                            padding: '2.5rem',
+                            marginBottom: '2rem',
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                            border: '1px solid #e0e0e0'
+                        }}>
+                            <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', fontWeight: '700', color: '#333' }}>{selectedCourse.title}</h1>
+                            <p style={{ fontSize: '1.1rem', color: '#666', lineHeight: '1.7', marginBottom: '2rem' }}>{selectedCourse.description}</p>
+                        </div>
+
+                        <div style={{ background: 'white', borderRadius: '16px', padding: '2.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0' }}>
+                            <h2 style={{ marginBottom: '2rem', fontSize: '1.8rem', fontWeight: '700', color: '#333' }}>Learning Materials</h2>
+                            {loading ? (
+                                <div style={{ textAlign: 'center', padding: '60px', color: '#666' }}>Loading materials...</div>
+                            ) : courseContents.length === 0 ? (
+                                <div style={{ textAlign: 'center', padding: '80px' }}>
+                                    <p style={{ fontSize: '1.1rem', color: '#888' }}>No learning materials available yet for this course.</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                                        {courseContents.map(content => (
+                                            <div
+                                                key={content.id}
+                                                onClick={() => setSelectedContent(content)}
+                                                style={{
+                                                    background: selectedContent?.id === content.id ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'white',
+                                                    color: selectedContent?.id === content.id ? 'white' : '#333',
+                                                    padding: '1.75rem',
+                                                    borderRadius: '12px',
+                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.3s',
+                                                    border: '2px solid #e0e0e0'
+                                                }}
+                                            >
+                                                <div style={{ fontSize: '0.85rem', fontWeight: '600', opacity: 0.8, marginBottom: '0.5rem' }}>
+                                                    {content.contentType}
+                                                </div>
+                                                <h4 style={{ marginBottom: '0.5rem', fontSize: '1.15rem', fontWeight: '700' }}>{content.title}</h4>
+                                                <p style={{ fontSize: '0.9rem', opacity: 0.8, margin: 0 }}>Click to view</p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {selectedContent && (
+                                        <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '2px solid #f0f0f0' }}>
+                                            {renderContentViewer()}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </>
+                )}
+            </div>
+
+            {showEnrollModal && enrollingCourse && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+                    <div style={glassModalStyle}>
+                        <h2 style={{ marginBottom: '1.5rem', fontSize: '1.8rem', fontWeight: '700' }}>Enroll in Course</h2>
+                        <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>{enrollingCourse.title}</h3>
+                        <p style={{ color: '#666', marginBottom: '2rem' }}>{enrollingCourse.description}</p>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                            <button onClick={() => setShowEnrollModal(false)} style={{ padding: '14px 28px', background: '#f5f5f5', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: '600' }}>Cancel</button>
+                            <button onClick={handleEnroll} className="primary-btn" style={{ padding: '14px 28px' }}>Confirm Enrollment</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showGenerateModal && generatingCourse && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+                    <div style={glassModalStyle}>
+                        <h2 style={{ marginBottom: '1.5rem', fontSize: '1.8rem', fontWeight: '700' }}>Generate Study Material</h2>
+                        <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>{generatingCourse.title}</h3>
+                        <p style={{ color: '#666', marginBottom: '1.5rem' }}>Choose your preferred format for AI-generated study materials.</p>
+
+                        <div style={{ marginBottom: '2rem' }}>
+                            <label style={{ display: 'block', marginBottom: '1rem', fontWeight: '700' }}>Select Format:</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                {['PDF', 'VIDEO', 'BLOG', 'FLASHCARDS'].map(format => (
+                                    <div
+                                        key={format}
+                                        onClick={() => setSelectedFormat(format)}
+                                        style={{
+                                            padding: '1.25rem',
+                                            border: selectedFormat === format ? '3px solid #667eea' : '2px solid #e0e0e0',
+                                            borderRadius: '12px',
+                                            cursor: 'pointer',
+                                            background: selectedFormat === format ? '#f0f4ff' : 'white',
+                                            textAlign: 'center',
+                                            fontWeight: '700'
+                                        }}
+                                    >
+                                        {format}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                            <button onClick={() => setShowGenerateModal(false)} disabled={generatingContent} style={{ padding: '14px 28px', background: '#f5f5f5', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: '600' }}>
+                                Cancel
+                            </button>
+                            <button onClick={handleGenerateMaterial} disabled={generatingContent} className="primary-btn" style={{ padding: '14px 28px' }}>
+                                {generatingContent ? 'Generating...' : `Generate ${selectedFormat}`}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <style jsx>{`
+        .course-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+          border-color: #667eea !important;
+        }
+      `}</style>
+        </div>
+    );
+}

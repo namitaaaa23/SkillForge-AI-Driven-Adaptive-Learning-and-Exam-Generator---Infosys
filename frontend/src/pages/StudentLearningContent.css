@@ -1,0 +1,325 @@
+.student-learning-container {
+  padding: 20px;
+  background: transparent;
+  /* Let the global animated background show through */
+  min-height: 100vh;
+}
+
+.learning-header {
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.learning-header h1 {
+  font-size: 32px;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.course-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Format Choice Cards (Replacing Filter Buttons) */
+/* Layout Change: Remove Split View */
+.learning-content-layout {
+  display: block;
+  /* Full width for new flow */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Chapter Grid View */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.chapter-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+}
+
+.chapter-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.chapter-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.chapter-info p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.resource-badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge.pdf {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+}
+
+.badge.video {
+  background: rgba(55, 66, 250, 0.1);
+  color: #3742fa;
+}
+
+.badge.article {
+  background: rgba(46, 213, 115, 0.1);
+  color: #2ed573;
+}
+
+.chapter-arrow {
+  margin-left: auto;
+  font-size: 24px;
+  color: #ccc;
+  transition: transform 0.3s ease;
+}
+
+.chapter-card:hover .chapter-arrow {
+  transform: translateX(5px);
+  color: var(--primary-color);
+}
+
+/* Detail View */
+.chapter-detail-view {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.back-btn:hover {
+  color: var(--primary-color);
+}
+
+.chapter-title {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: var(--text-main);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.format-selection-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.format-option-card {
+  flex: 1;
+  min-width: 200px;
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  padding: 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.format-option-card:hover {
+  background: white;
+  border-color: #ddd;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.format-option-card.active {
+  background: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 5px 20px rgba(106, 17, 203, 0.15);
+}
+
+.format-icon {
+  font-size: 28px;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.format-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.format-info p {
+  margin: 5px 0 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+/* Content Viewer Frame */
+.content-viewer-section {
+  min-height: 500px;
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+.select-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: #999;
+  font-size: 18px;
+  font-style: italic;
+  background: #fafafa;
+}
+
+.content-preview h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 26px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 15px;
+}
+
+.content-preview p {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 25px;
+  font-size: 1.05rem;
+}
+
+.blog-content {
+  background: #f8f9fa;
+  padding: 25px;
+  border-left: 4px solid var(--secondary-color);
+  border-radius: 8px;
+  font-family: 'Georgia', serif;
+}
+
+.btn-download,
+.btn-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 25px;
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+}
+
+.btn-download:hover,
+.btn-read:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+}
+
+.no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: #95a5a6;
+  font-size: 16px;
+}
+
+.loading,
+.no-content {
+  text-align: center;
+  color: #7f8c8d;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .learning-content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .content-list {
+    max-height: 300px;
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+}

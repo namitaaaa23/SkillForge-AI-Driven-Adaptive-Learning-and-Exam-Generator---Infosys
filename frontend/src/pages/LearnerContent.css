@@ -1,0 +1,441 @@
+/* LEARNER CONTENT PAGE */
+.lc-wrapper {
+  min-height: 100vh;
+  background: transparent;
+  /* Use global pastel body background */
+  font-family: "Inter", sans-serif;
+  color: #1a1a1a;
+}
+
+/* Removed local animation to sync with global */
+
+/* TOP NAVIGATION */
+.lc-topbar {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  background: rgba(15, 15, 17, 0.75);
+  backdrop-filter: blur(12px);
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.lc-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: #ccc;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: white;
+}
+
+.lc-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.lc-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* User Menu */
+.lc-menu-panel {
+  position: absolute;
+  top: 75px;
+  right: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  padding: 20px;
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lc-user-info h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.lc-user-info p {
+  margin: 5px 0 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.lc-menu-item,
+.lc-logout {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 5px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #555;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.lc-menu-item:hover {
+  background: #f5f5f5;
+  color: var(--primary-color);
+}
+
+.lc-logout {
+  color: #e74c3c;
+}
+
+.lc-logout:hover {
+  background: #fee;
+}
+
+/* Main Content Area */
+.lc-main {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.lc-header {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+.lc-header h1 {
+  font-size: 36px;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lc-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.lc-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.lc-tabs button {
+  padding: 10px 25px;
+  border-radius: 25px;
+  border: none;
+  background: rgba(255, 255, 255, 0.8);
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.lc-tabs button.active,
+.lc-tabs button:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+}
+
+/* Course/Topic Grid */
+.lc-topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.lc-topic-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lc-topic-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+}
+
+.lc-topic-header h3 {
+  font-size: 22px;
+  color: var(--text-main);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.lc-topic-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.lc-course-tag,
+.lc-instructor {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.lc-instructor {
+  color: #4a5568;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.lc-progress-circle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.lc-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f0f11;
+}
+
+.lc-format-section {
+  margin-top: 24px;
+}
+
+.lc-format-label {
+  color: #0f0f11;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.lc-format-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.lc-format-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.lc-format-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.format-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.lc-format-card.pdf .format-icon-wrapper {
+  background: rgba(240, 147, 251, 0.15);
+  color: #f093fb;
+}
+
+.lc-format-card.pdf:hover {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border-color: transparent;
+  color: white;
+}
+
+.lc-format-card.pdf:hover .format-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.lc-format-card.blog .format-icon-wrapper {
+  background: rgba(79, 172, 254, 0.15);
+  color: #4facfe;
+}
+
+.lc-format-card.blog:hover {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border-color: transparent;
+  color: white;
+}
+
+.lc-format-card.blog:hover .format-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.lc-format-card.video .format-icon-wrapper {
+  background: rgba(67, 233, 123, 0.15);
+  color: #43e97b;
+}
+
+.lc-format-card.video:hover {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  border-color: transparent;
+  color: white;
+}
+
+.lc-format-card.video:hover .format-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.lc-format-card.quiz .format-icon-wrapper {
+  background: rgba(250, 112, 154, 0.15);
+  color: #fa709a;
+}
+
+.lc-format-card.quiz:hover {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  border-color: transparent;
+  color: white;
+}
+
+.lc-format-card.quiz:hover .format-icon-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.format-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #0f0f11;
+}
+
+.format-desc {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.lc-format-card:hover .format-name,
+.lc-format-card:hover .format-desc {
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .lc-main {
+    padding: 90px 20px 30px;
+  }
+
+  .lc-topics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lc-format-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lc-topic-card {
+    padding: 24px;
+  }
+}
+
+.lc-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.lc-tabs button {
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #333;
+  /* Explicit color */
+}
+
+.lc-tabs button:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.lc-tabs button.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}

@@ -1,0 +1,217 @@
+/* HOME PAGE - PASTEL GLASSMORPHISM THEME */
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* HEADER - Black with White/Yellow links */
+.header {
+  background-color: #000000;
+  /* Pure Black as per Image 0 */
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.header-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  /* Gradient text 'SkillForge AI' based on image */
+  background: linear-gradient(to right, #FF9A9E, #FECFEF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.nav-links a {
+  color: #ffffff;
+  /* White text */
+  margin-left: 30px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 0;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #FF9A9E;
+  /* Pastel accent on hover */
+}
+
+/* HERO SECTION */
+.hero {
+  background: transparent;
+  /* Show body gradient */
+  text-align: center;
+  padding: 100px 20px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  /* Sharp Black text for contrast */
+  letter-spacing: -1px;
+  margin-bottom: 1.5rem;
+  max-width: 900px;
+  line-height: 1.2;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 3rem;
+  max-width: 700px;
+}
+
+/* BUTTONS - STACKED & COLORED (Image 0) */
+.login-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  min-width: 140px;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.learner-btn {
+  background-color: #d99a6c;
+  /* Orange */
+}
+
+.admin-btn {
+  background-color: #7d72c2;
+  /* Purple/Blue */
+}
+
+.guardian-btn {
+  background-color: #a66ebd;
+  /* Pink/Orchid */
+}
+
+/* FEATURES - Black Background (Image 2) */
+.features {
+  background-color: #111;
+  /* Dark section */
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.features h2 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.feature-grid {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  flex: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.feature-card h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* ABOUT - Pastel/Glass (Image 1) */
+.about {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 100px 20px;
+  text-align: center;
+  margin: 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.about h2 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+}
+
+.about-text {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  color: #333;
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* CONTACT - Footer (Image 2 Bottom) */
+.contact {
+  background: #1a1a1a;
+  padding: 60px 20px;
+  color: #ccc;
+  text-align: center;
+}
+
+.contact h2 {
+  color: #d99a6c;
+  /* Accent color matching buttons */
+  margin-bottom: 1rem;
+}
