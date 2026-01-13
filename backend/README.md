@@ -1,74 +1,114 @@
-# SkillForge AI driven– Adaptive Learning & AI Exam Generation Platform
+# SkillForge AI – Backend
 
-## Project Overview
-SkillForge AI is a multi-role, AI-driven adaptive learning platform designed to deliver personalized educational experiences through intelligent content delivery, automated assessments, and real-time performance monitoring. The platform supports three primary user roles — Learner, Admin, and Guardian — each with role-specific dashboards and capabilities.
-
-The system emphasizes adaptive learning, self-centric performance tracking, and AI-powered assessment generation while maintaining a clean, modern, and professional user interface.
+The **SkillForge AI Backend** is a Spring Boot–based RESTful service that powers the core functionality of the SkillForge AI Adaptive Learning Platform.  
+It handles authentication, role-based access control, assessments, and secure API communication between the frontend and future AI/database layers.
 
 ---
 
-## Key Objectives
-- Deliver personalized adaptive learning paths for learners
-- Enable AI-generated quizzes, MCQs, and instant evaluation
-- Provide role-based dashboards for Learners, Admins, and Guardians
-- Offer real-time progress tracking and analytics
-- Allow guardians to monitor academic performance transparently
-- Maintain a scalable, modular architecture for future AI integration
+## 🚀 Key Responsibilities
+- Secure user authentication using JWT
+- Role-based access for Learner, Admin, and Guardian
+- Assessment and exam-related APIs
+- Backend foundation for AI-based exam generation
+- Scalable and modular architecture
 
 ---
 
-## System Roles
-- **Learner/User**: Consumes adaptive content, takes assessments, tracks progress
-- **Admin/Instructor**: Manages users, courses, assessments, and analytics
-- **Guardian**: Monitors ward performance, receives alerts, communicates with admin
+## 🏗️ Architecture
+The backend follows a **layered Spring Boot architecture**:
+
+Controller → Service → Repository → Database (Planned)
+↓
+Security (JWT)
+
+
+This ensures clean separation of concerns and easy future expansion.
 
 ---
 
-## Project Structure
-skillforge-application/
+## 👥 Supported Roles
+- **Learner/User** – Assessments, progress APIs
+- **Admin/Instructor** – User & test management
+- **Guardian** – Ward monitoring and analytics
+
+Role access is enforced using **Spring Security + JWT**.
+
+---
+
+## 🛠️ Tech Stack
+| Layer | Technology |
+|-----|-----------|
+| Language | Java |
+| Framework | Spring Boot |
+| Security | Spring Security, JWT |
+| Build Tool | Maven |
+| API Type | REST |
+| Database | Planned (MongoDB / MySQL) |
+| AI Layer | Planned |
+
+---
+
+## 📂 Project Structure
+backend/
+├── src/main/java/com/skillforge
+│ ├── controller
+│ ├── service
+│ ├── repository
+│ ├── model
+│ ├── dto
+│ ├── security
+│ └── exception
 │
-├── frontend/ # React-based UI/UX implementation
-├── backend/ # Spring Boot backend APIs and services
-├── Documentation/ # Reports, milestones, PPTs, and references
-├── README.md # Project overview (this file)
-└── .gitignore
+├── src/main/resources
+│ └── application.properties
+│
+├── API_DOCUMENTATION.md
+├── pom.xml
+├── mvnw.cmd
+├── run-maven.bat
+└── README.md
 
 
 ---
 
-## Milestone Tracking
+## 🔐 Security
+- JWT-based authentication
+- Stateless session handling
+- Custom authentication filter
+- Role-based endpoint protection
 
-| Milestone | Description | Status |
-|----------|-------------|--------|
-| Milestone 1 | Architecture design, wireframes, workflow diagrams | Completed |
-| Milestone 2 | Frontend development & backend API integration | Completed |
-| Milestone 3 | Database integration (MongoDB) | Pending |
-| Milestone 4 | AI integration for adaptive learning & exam generation | Pending |
-| Milestone 5 | Final testing, deployment & optimization | Pending |
-
----
-
-## Technology Stack
-- **Frontend**: React (Vite), HTML5, CSS3
-- **Backend**: Java Spring Boot (REST APIs)
-- **Database**: MongoDB (planned)
-- **AI Layer**: LLM-based adaptive logic (planned)
-- **Version Control**: Git & GitHub
+Main security files:
+- `JwtUtil.java`
+- `JwtAuthFilter.java`
+- `SecurityConfig.java`
 
 ---
 
-## Current Status
-The project currently includes a fully designed frontend UI, role-based dashboards, backend API skeletons, and successful frontend-backend integration. Database connectivity and AI-driven features are planned for upcoming milestones.
+## 🌐 APIs
+- Authentication APIs
+- Test & assessment APIs
+- User management endpoints
+- Health check endpoint
+
+📄 Full API list available in **API_DOCUMENTATION.md**
 
 ---
 
-## Future Enhancements
-- Adaptive AI engine for learning path personalization
-- AI-based exam and quiz generation
-- Sentiment analysis for guardian feedback
-- Notification and alert system
-- Secure authentication and authorization layer
+## ▶️ Running the Backend
 
----
+### Prerequisites
+- Java 17+
+- Maven
+
+### Run using Maven
+```bash
+cd backend
+mvn spring-boot:run
+
+###Windows Shortcut
+run-maven.bat
 
 
+###Server runs at:
+
+http://localhost:8080
