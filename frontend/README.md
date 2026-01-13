@@ -25,3 +25,45 @@ The frontend module of SkillForge AI is responsible for delivering a clean, resp
 ---
 
 ## Folder Structure
+frontend/
+│
+├── src/
+│ ├── components/ # Reusable UI components
+│ ├── pages/ # Role-based pages and dashboards
+│ ├── services/ # API service handlers
+│ ├── App.jsx
+│ └── main.jsx
+│
+├── public/
+├── package.json
+└── README.md
+
+
+---
+
+## Design Principles
+- Minimalistic and professional UI
+- Self-centric data visibility (no peer ranking exposure)
+- Adaptive learning-first layout
+- Consistent color palette across all screens
+
+---
+
+## Current Status
+The frontend module is fully functional in terms of UI/UX, routing, and backend API integration. It is designed to seamlessly support upcoming AI-driven features and database-backed content.
+
+---
+
+## Future Scope
+- Dynamic content rendering from database
+- AI chatbot UI integration
+- Performance analytics visualization
+- Accessibility enhancements
+
+---
+
+## Setup Instructions
+```bash
+npm install
+npm run dev
+
